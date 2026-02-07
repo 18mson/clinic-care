@@ -88,9 +88,8 @@ export default function Home() {
       <Header isScrolled={isScrolled} />
 
       {/* Mobile Only Top Section */}
-      <section className="block md:hidden relative bg-linear-to-tr from-teal-700 to-teal-400 rounded-b-3xl shadow-lg px-4 pt-6 pb-4 mb-4 overflow-visible">
-        <div className="flex justify-between items-start relative">
-          {/* Logo and Text */}
+      <section className="block md:hidden relative bg-linear-to-tr from-teal-700 to-teal-400 rounded-b-3xl pt-6 pb-4 mb-4 overflow-visible">
+        <div className="flex justify-between items-start relative px-4">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <Stethoscope className="h-8 w-8 text-white" />
@@ -98,15 +97,12 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Notification Bell */}
           <div className="relative">
             <span className="absolute -top-1 -right-1.5 z-10 w-3 h-3 bg-red-500 border-2 border-white rounded-full pointer-events-none"></span>
-            {/* Bell icon from lucide-react */}
             <Bell className="h-8 w-8 text-white" />
           </div>
         </div>
-        {/* User Card */}
-        <div className="flex items-center gap-3 mt-5 mb-1">
+        <div className="flex items-center gap-3 mt-5 mb-1 px-4">
           <Image
             src="https://randomuser.me/api/portraits/women/65.jpg"
             alt="Dita Nirmala"
@@ -122,12 +118,97 @@ export default function Home() {
           </div>
         </div>
         {/* Search Bar */}
-        <div className="mt-4">
+        <div className="mt-4 px-4">
           <div className="flex items-center gap-3 bg-white rounded-xl overflow-hidden shadow-sm px-3 py-2">
             <svg className="text-gray-400" width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke="#94a3b8" strokeWidth="2"/><path d="M21 21l-4.35-4.35" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round"/></svg>
-            <input className="border-0 flex-1 focus:outline-none focus:ring-0 text-base text-gray-900 bg-transparent" placeholder="Cari klinik..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+            <input className="border-0 flex-1 focus:outline-none focus:ring-0 text-base text-gray-900 bg-transparent" placeholder="Cari klinik..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onFocus={() => setShowSuggestions(true)} />
           </div>
         </div>
+        {showSuggestions && (
+            <div className="absolute z-20 w-full mt-5 bg-white border-gray-100 overflow-hidden">
+              {searchQuery.length > 0 && (
+                <>
+                  {searchResults.length > 0 ? (
+                    <>
+                      <div className="p-4 border-b border-gray-100">
+                        <div className="flex flex-wrap gap-2">
+                          {['Semua', 'Umum', 'Mata', 'Gigi', 'THT'].map((cat) => (
+                            <button
+                              key={cat}
+                              onClick={() => cat !== 'Semua' ? handleCategoryFilter(cat) : handleCategoryFilter('')}
+                              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                                (cat === 'Semua' && !selectedCategory) || selectedCategory === cat
+                                  ? 'bg-teal-600 text-white'
+                                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-slate-600'
+                              }`}
+                            >
+                              {cat}
+                            </button>
+                          ))}
+                        </div>
+
+                        <div className="flex justify-between">
+                          <div className="text-xs text-gray-500 mt-3">
+                            {searchResults.length} Ditemukan
+                          </div>
+                          <button className="text-xs text-teal-600 hover:text-teal-700 font-medium">
+                            Default ↓
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="overflow-y-auto min-h-screen">
+                        {searchResults.map((clinic) => (
+                          <div
+                            key={clinic.id}
+                            onClick={() => handleClinicClick(clinic.id)}
+                            className="mx-4 my-2 p-4 rounded-xl hover:bg-gray-50 transition-colors border border-gray-50 shadow-lg last:border-0 cursor-pointer"
+                          >
+                            <div className="flex items-start space-x-4">
+                              <Image
+                                src={clinic.image_url}
+                                alt={clinic.name}
+                                width={80}
+                                height={80}
+                                className="w-20 h-20 rounded-lg object-cover"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-semibold text-gray-900 mb-1">
+                                  {clinic.name}
+                                </h4>
+                                <div className="text-xs text-gray-600 mb-2">
+                                  Klinik {clinic.category}
+                                </div>
+                                <div className="flex items-center text-xs text-gray-500 space-x-1 mb-2">
+                                  <MapPin className="h-3 w-3" />
+                                  <span className="line-clamp-1">{clinic.address}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <div className="flex items-center space-x-1">
+                                    <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                    <span className="text-xs font-medium text-gray-700">
+                                      {clinic.rating}
+                                    </span>
+                                  </div>
+                                  <span className="text-xs text-gray-400">
+                                    · {clinic.review_count} Reviews
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="p-8 text-center text-gray-500 min-h-screen">
+                      <p>Tidak ada hasil untuk &quot;{searchQuery}&quot;</p>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
       </section>
 
       <main className="md:pt-16">
