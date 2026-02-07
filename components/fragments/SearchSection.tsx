@@ -4,16 +4,7 @@ import { Search, Star, MapPin } from 'lucide-react';
 import { Input } from '@/components/elements/input';
 import { Card } from '@/components/elements/card';
 import Image from 'next/image';
-
-interface Clinic {
-  id: string;
-  name: string;
-  category: string;
-  address: string;
-  image_url: string;
-  rating: number;
-  totalReviews: number;
-}
+import { Category, Clinic } from '@/lib/hooks';
 
 interface SearchSectionProps {
   searchQuery: string;
@@ -24,6 +15,7 @@ interface SearchSectionProps {
   selectedCategory: string | null;
   handleCategoryFilter: (category: string) => void;
   handleClinicClick: (clinicId: string) => void;
+  categories: Category[] ;
 }
 
 export function SearchSection({
@@ -35,6 +27,7 @@ export function SearchSection({
   selectedCategory,
   handleCategoryFilter,
   handleClinicClick,
+  categories
 }: SearchSectionProps) {
   return (
     <section className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 md:mt-8 mb-20 hidden md:block">
@@ -115,7 +108,7 @@ export function SearchSection({
                                   {clinic.name}
                                 </h4>
                                 <div className="text-xs text-gray-600 mb-2">
-                                  Klinik {clinic.category}
+                                  Klinik {clinic.type}
                                 </div>
                                 <div className="flex items-center text-xs text-gray-500 space-x-1 mb-2">
                                   <MapPin className="h-3 w-3" />
@@ -140,6 +133,21 @@ export function SearchSection({
                     </>
                   ) : (
                     <div className="p-8 text-center text-gray-500">
+                      <div className="flex flex-wrap gap-2">
+                        {!!categories?.length && categories.map((cat) => (
+                          <button
+                            key={cat.id}
+                            onClick={() => cat.name !== 'Semua' ? handleCategoryFilter(cat.name) : handleCategoryFilter('')}
+                            className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                              (cat.name === 'Semua' && !selectedCategory) || selectedCategory === cat.name
+                                ? 'bg-teal-600 text-white'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-slate-600'
+                            }`}
+                          >
+                            {cat.name}
+                          </button>
+                        ))}
+                      </div>
                       <p>Tidak ada hasil untuk &quot;{searchQuery}&quot;</p>
                     </div>
                   )}

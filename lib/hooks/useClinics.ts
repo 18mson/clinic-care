@@ -4,7 +4,7 @@ import fetcher from '@/lib/fetcher';
 export interface Clinic {
   id: string;
   name: string;
-  category: string;
+  type: string;
   address: string;
   rating: number;
   totalReviews: number;

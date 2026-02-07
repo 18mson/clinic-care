@@ -52,8 +52,15 @@ export default function Home() {
   const { clinics: searchResults = [] } = useClinics(searchQuery);
 
   const { categories } = useCategories();
-  console.log(categories);
   
+  const filteredResults = selectedCategory
+  ? searchResults.filter((clinic) =>
+      clinic.type
+        ?.toLowerCase()
+        .includes(selectedCategory.toLowerCase())
+    )
+  : searchResults
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -150,24 +157,24 @@ export default function Home() {
                     <>
                       <div className="p-4 border-b border-gray-100">
                         <div className="flex flex-wrap gap-2">
-                          {['Semua', 'Umum', 'Mata', 'Gigi', 'THT'].map((cat) => (
+                          {!!categories?.length && categories.map((cat) => (
                             <button
-                              key={cat}
-                              onClick={() => cat !== 'Semua' ? handleCategoryFilter(cat) : handleCategoryFilter('')}
+                              key={cat.id}
+                              onClick={() => cat.name !== 'Semua' ? handleCategoryFilter(cat.name) : handleCategoryFilter('')}
                               className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                                (cat === 'Semua' && !selectedCategory) || selectedCategory === cat
+                                (cat.name === 'Semua' && !selectedCategory) || selectedCategory === cat.name
                                   ? 'bg-teal-600 text-white'
                                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-slate-600'
                               }`}
                             >
-                              {cat}
+                              {cat.name}
                             </button>
                           ))}
                         </div>
 
                         <div className="flex justify-between">
                           <div className="text-xs text-gray-500 mt-3">
-                            {searchResults.length} Ditemukan
+                            {filteredResults.length} Ditemukan
                           </div>
                           <button className="text-xs text-teal-600 hover:text-teal-700 font-medium">
                             Default ↓
@@ -176,7 +183,7 @@ export default function Home() {
                       </div>
 
                       <div className="overflow-y-auto min-h-screen">
-                        {searchResults.map((clinic) => (
+                        {filteredResults.map((clinic) => (
                           <div
                             key={clinic.id}
                             onClick={() => handleClinicClick(clinic.id)}
@@ -195,7 +202,7 @@ export default function Home() {
                                   {clinic.name}
                                 </h4>
                                 <div className="text-xs text-gray-600 mb-2">
-                                  Klinik {clinic.category}
+                                  {clinic.type}
                                 </div>
                                 <div className="flex items-center text-xs text-gray-500 space-x-1 mb-2">
                                   <MapPin className="h-3 w-3" />
@@ -313,7 +320,8 @@ export default function Home() {
             selectedCategory={selectedCategory}
             handleCategoryFilter={handleCategoryFilter}
             handleClinicClick={handleClinicClick}
-            searchResults={searchResults}
+            searchResults={filteredResults}
+            categories={categories ?? []}
           />
         </div>
 
