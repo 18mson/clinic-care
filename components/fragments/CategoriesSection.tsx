@@ -19,7 +19,7 @@ export function CategoriesSection() {
   // Prevent hydration mismatch by not rendering until mounted
   if (!categories && !categoriesLoading && !categoriesError) {
     return (
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-20 py-5 bg-white">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
             Kategori <span className="text-teal-600">Klinik</span>
@@ -31,14 +31,22 @@ export function CategoriesSection() {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-      <div className="text-center mb-12">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-20 py-0 bg-white">
+      <div className="md:text-center text-left md:mb-12 mb-4 hidden md:block">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
           Kategori <span className="text-teal-600">Klinik</span>
         </h2>
       </div>
+      <div className="flex items-center justify-between mb-4 md:hidden">
+        <h2 className="text-lg font-semibold text-gray-900">
+        Kategori Klinik
+        </h2>
+        <button className="text-sm text-teal-600 font-medium">
+          Lihat semua
+        </button>
+      </div>
 
-      <div className="flex justify-center items-center gap-6 md:gap-8 flex-wrap">
+      <div className="flex md:justify-center md:items-center gap-2 md:gap-8 flex-wrap">
         {categoriesLoading ? (
           <div className="col-span-4 md:col-span-8 text-center">
             <p className="text-gray-500">Loading categories...</p>
@@ -56,8 +64,8 @@ export function CategoriesSection() {
                 key={category.id}
                 className="flex flex-col items-center space-y-3 group cursor-pointer"
               >
-                <div className={`w-28 h-28 rounded-full ${categoryMeta.color} flex items-center justify-center transition-all group-hover:scale-110 group-hover:shadow-lg`}>
-                  <Icon className="h-12 w-12" />
+                <div className={`md:w-28 md:h-28 rounded-full ${categoryMeta.color} flex items-center justify-center transition-all group-hover:scale-110 group-hover:shadow-lg`}>
+                  <Icon className="md:h-12 md:w-12 h-10 w-10" />
                 </div>
                 <span className="text-sm font-medium text-teal-600 group-hover:text-teal-700 transition-colors">
                   {category.name}

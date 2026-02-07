@@ -38,7 +38,7 @@ export default function ClinicDetail() {
   const finalImages = rawImages.map(normalizeImage).length < 6 ? MOCK_IMAGES.clinic1 : rawImages.map(normalizeImage);
   const imagesToShow = finalImages.length > 0 ? finalImages[0] : PLACEHOLDER_IMAGE;
   return (
-    <div className="min-h-screen bg-white pt-16">
+    <div className="min-h-screen bg-white md:pt-16">
       <Header isScrolled={true} />
       <div className="max-w-7xl mx-auto">
         <div className="px-4 sm:px-6 lg:px-8 py-4 text-sm text-gray-600 flex items-center space-x-2 mt-10">

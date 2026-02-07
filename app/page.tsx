@@ -2,19 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Star, MapPin, StarIcon } from 'lucide-react';
-import { Input } from '@/components/elements/input';
+import { Bell, MapPin, Star, StarIcon, Stethoscope } from 'lucide-react';
 import { Button } from '@/components/elements/button';
-import { Card } from '@/components/elements/card';
 import { Header } from '@/components/elements/header';
 import { CategoriesSection } from '@/components/fragments/CategoriesSection';
-import { RecommendedClinicsSection } from '@/components/fragments/RecommendedClinicsSection';
 import { useClinics } from '@/lib/hooks';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { SearchSection } from '@/components/fragments/SearchSection';
+import ClinicSection from '@/components/fragments/ClinicSection';
 
 const promoItems = [
   {
@@ -51,9 +50,6 @@ export default function Home() {
   // Fetch clinics based on search query
   const { clinics: searchResults = [] } = useClinics(searchQuery);
   
-  // Get all clinics for recommended section
-  const { clinics: recommendedClinics = [] } = useClinics();
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -91,12 +87,54 @@ export default function Home() {
       `}</style>
       <Header isScrolled={isScrolled} />
 
-      <main className="pt-16">
-        <section className="relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-linear-to-b from-teal-100 to-teal-400 translate-x-1/5" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-100 rounded-full blur-3xl opacity-30 translate-y-1/2 -translate-x-1/2" />
+      {/* Mobile Only Top Section */}
+      <section className="block md:hidden relative bg-linear-to-tr from-teal-700 to-teal-400 rounded-b-3xl shadow-lg px-4 pt-6 pb-4 mb-4 overflow-visible">
+        <div className="flex justify-between items-start relative">
+          {/* Logo and Text */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <Stethoscope className="h-8 w-8 text-white" />
+              <span className="font-bold text-white text-2xl">CliniCare</span>
+            </div>
+          </div>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 relative">
+          {/* Notification Bell */}
+          <div className="relative">
+            <span className="absolute -top-1 -right-1.5 z-10 w-3 h-3 bg-red-500 border-2 border-white rounded-full pointer-events-none"></span>
+            {/* Bell icon from lucide-react */}
+            <Bell className="h-8 w-8 text-white" />
+          </div>
+        </div>
+        {/* User Card */}
+        <div className="flex items-center gap-3 mt-5 mb-1">
+          <Image
+            src="https://randomuser.me/api/portraits/women/65.jpg"
+            alt="Dita Nirmala"
+            width={46}
+            height={46}
+            className="rounded-full w-11 h-11 object-cover border-4 border-white shadow-md"
+          />
+          <div>
+            <span className="font-semibold text-white text-lg block leading-tight">Dita Nirmala</span>
+            <span className="text-teal-100 text-xs flex items-center gap-1">Kebayoran Baru
+              <MapPin className="h-4 w-4 text-white" />
+            </span>
+          </div>
+        </div>
+        {/* Search Bar */}
+        <div className="mt-4">
+          <div className="flex items-center gap-3 bg-white rounded-xl overflow-hidden shadow-sm px-3 py-2">
+            <svg className="text-gray-400" width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke="#94a3b8" strokeWidth="2"/><path d="M21 21l-4.35-4.35" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round"/></svg>
+            <input className="border-0 flex-1 focus:outline-none focus:ring-0 text-base text-gray-900 bg-transparent" placeholder="Cari klinik..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+          </div>
+        </div>
+      </section>
+
+      <main className="md:pt-16">
+        <section className="md:block relative hidden overflow-hidden">
+          <div className="absolute overflow-hidden top-0 right-0 w-96 h-96 rounded-full bg-linear-to-b from-teal-100 to-teal-400 translate-x-1/5" />
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8 relative">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-8">
                 <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
@@ -167,131 +205,39 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-20">
-          <Card className="p-8 shadow-2xl">
-            <h2 className="text-2xl font-bold text-teal-700 mb-6">
-              Cari Klinik Pilihan Anda
-            </h2>
-
-            <div className="relative">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <Input
-                  type="text"
-                  placeholder="Cari klinik"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setShowSuggestions(true)}
-                  className="pl-12 pr-4 py-6 text-base border-gray-200 focus:border-teal-500 focus:ring-teal-500 font-semibold"
-                />
-              </div>
-
-              {showSuggestions && (
-                <div className="absolute z-50 w-full mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden">
-                  {searchQuery.length > 0 ? (
-                    <>
-                      {searchResults.length > 0 ? (
-                        <>
-                          <div className="p-4 border-b border-gray-100">
-                            <div className="flex items-center justify-between mb-3">
-                              <h3 className="font-semibold text-gray-900">
-                                Hasil untuk &quot;{searchQuery}&quot;
-                              </h3>
-                              <button className="text-xs text-teal-600 hover:text-teal-700 font-medium">
-                                Default ↓
-                              </button>
-                            </div>
-
-                            <div className="flex flex-wrap gap-2">
-                              {['Semua', 'Umum', 'Mata', 'Gigi', 'THT'].map((cat) => (
-                                <button
-                                  key={cat}
-                                  onClick={() => cat !== 'Semua' ? handleCategoryFilter(cat) : setSelectedCategory(null)}
-                                  className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                                    (cat === 'Semua' && !selectedCategory) || selectedCategory === cat
-                                      ? 'bg-teal-600 text-white'
-                                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                  }`}
-                                >
-                                  {cat}
-                                </button>
-                              ))}
-                            </div>
-
-                            <div className="text-xs text-gray-500 mt-3">
-                              {searchResults.length} Ditemukan
-                            </div>
-                          </div>
-
-                          <div className="max-h-96 overflow-y-auto">
-                            {searchResults.map((clinic) => (
-                              <div
-                                key={clinic.id}
-                                onClick={() => handleClinicClick(clinic.id)}
-                                className="p-4 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0 cursor-pointer"
-                              >
-                                <div className="flex items-start space-x-4">
-                                  <Image
-                                    src={clinic.image_url}
-                                    alt={clinic.name}
-                                    width={80}
-                                    height={80}
-                                    className="w-20 h-20 rounded-lg object-cover"
-                                  />
-                                  <div className="flex-1 min-w-0">
-                                    <h4 className="font-semibold text-gray-900 mb-1">
-                                      {clinic.name}
-                                    </h4>
-                                    <div className="text-xs text-gray-600 mb-2">
-                                      Klinik {clinic.category}
-                                    </div>
-                                    <div className="flex items-center text-xs text-gray-500 space-x-1 mb-2">
-                                      <MapPin className="h-3 w-3" />
-                                      <span className="line-clamp-1">{clinic.address}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                      <div className="flex items-center space-x-1">
-                                        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                                        <span className="text-xs font-medium text-gray-700">
-                                          {clinic.rating}
-                                        </span>
-                                      </div>
-                                      <span className="text-xs text-gray-400">
-                                        · {clinic.review_count} Reviews
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </>
-                      ) : (
-                        <div className="p-8 text-center text-gray-500">
-                          <p>Tidak ada hasil untuk &quot;{searchQuery}&quot;</p>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <RecommendedClinicsSection clinics={recommendedClinics} onClinicClick={handleClinicClick} />
-                  )}
-                </div>
-              )}
-            </div>
-          </Card>
-        </section>
+        <div className="hidden md:block">
+          <SearchSection 
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            showSuggestions={showSuggestions}
+            setShowSuggestions={setShowSuggestions}
+            selectedCategory={selectedCategory}
+            handleCategoryFilter={handleCategoryFilter}
+            handleClinicClick={handleClinicClick}
+            searchResults={searchResults}
+          />
+        </div>
 
         <CategoriesSection />
+        <div className="md:hidden block">
+          <ClinicSection />
+        </div>
 
-        <section className="max-w-7xl mx-auto py-20">
-          <div className="text-center mb-12">
+        <section className="max-w-7xl mx-auto md:py-20 pb-5">
+          <div className="md:text-center text-left px-4 md:mb-12 mb-4 hidden md:block">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               Promo <span className="text-teal-600">Menarik</span>
             </h2>
           </div>
 
+          <div className="flex items-center justify-between mb-4 md:hidden px-4">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Promo Menarik
+            </h2>
+          </div>
+
           <div className="flex overflow-x-auto pb-4">
-            <div className="w-screen flex items-center space-x-6 px-8">
+            <div className="w-screen flex items-center space-x-6 px-4">
               {promoItems.map((promo, index) => (
                 <div key={index} className="relative rounded-2xl overflow-hidden group cursor-pointer h-80">
                   <Swiper
