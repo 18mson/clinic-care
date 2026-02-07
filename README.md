@@ -24,25 +24,39 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Folder structure 
 .
 ├── app/                     # Pages & layouts (Next.js App Router)
+
 │   ├── layout.tsx
+
 │   ├── page.tsx
+
 │   └── (routes)/            # Grouped routes (optional)
+
 │
 ├── components/
+
 │   ├── elements/            # Reusable UI components
+
 │   │   ├── button
+
 │   │   ├── input
+
 │   │   └── card
-│   │
+
 │   ├── fragments/           # Page-level fragments (composition of elements)
+
 │
 ├── lib/
 │   └── hooks/               # Custom hooks for API calls & data handling
+
 │       ├── useClinics.ts
+
 │       ├── useClinicDetail.ts
+
 │       └── useDoctors.ts
+
 │
 ├── public/                  # Static assets (images, icons, etc.)
+
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
