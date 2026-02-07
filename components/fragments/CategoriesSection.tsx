@@ -64,8 +64,8 @@ export function CategoriesSection() {
                 key={category.id}
                 className="flex flex-col items-center space-y-3 group cursor-pointer"
               >
-                <div className={`md:w-28 md:h-28 rounded-full ${categoryMeta.color} flex items-center justify-center transition-all group-hover:scale-110 group-hover:shadow-lg`}>
-                  <Icon className="md:h-12 md:w-12 h-10 w-10" />
+                <div className={`md:w-28 p-4 md:h-28 rounded-full ${categoryMeta.color} flex items-center justify-center transition-all group-hover:scale-110 group-hover:shadow-lg`}>
+                  <Icon className="md:h-12 md:w-12 h-8 w-8" />
                 </div>
                 <span className="text-sm font-medium text-teal-600 group-hover:text-teal-700 transition-colors">
                   {category.name}
