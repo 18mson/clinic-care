@@ -2,36 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Star, MapPin, Eye, Heart, Stethoscope, Activity, Ear, Building, StarIcon } from 'lucide-react';
-import { Input } from '@/components/input';
-import { Button } from '@/components/button';
-import { Card } from '@/components/card';
+import { Search, Star, MapPin, StarIcon } from 'lucide-react';
+import { Input } from '@/components/elements/input';
+import { Button } from '@/components/elements/button';
+import { Card } from '@/components/elements/card';
+import { Header } from '@/components/elements/header';
+import { CategoriesSection } from '@/components/fragments/CategoriesSection';
+import { RecommendedClinicsSection } from '@/components/fragments/RecommendedClinicsSection';
+import { useClinics } from '@/lib/hooks';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-
-interface Clinic {
-  id: string;
-  name: string;
-  category: string;
-  address: string;
-  rating: number;
-  review_count: number;
-  image_url: string;
-}
-
-const categories = [
-  { name: 'Umum', icon: Building, color: 'bg-teal-100 text-teal-600' },
-  { name: 'Mata', icon: Eye, color: 'bg-cyan-100 text-cyan-600' },
-  { name: 'Gigi', icon: Heart, color: 'bg-sky-100 text-sky-600' },
-  { name: 'Fisioterapi', icon: Activity, color: 'bg-teal-100 text-teal-600' },
-  { name: 'THT', icon: Ear, color: 'bg-cyan-100 text-cyan-600' },
-  { name: 'Umum', icon: Building, color: 'bg-sky-100 text-sky-600' },
-  { name: 'Mata', icon: Eye, color: 'bg-teal-100 text-teal-600' },
-  { name: 'Gigi', icon: Heart, color: 'bg-cyan-100 text-cyan-600' },
-];
 
 const promoItems = [
   {
@@ -62,10 +45,15 @@ export default function Home() {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults] = useState<Clinic[]>([]);
-  const [recommendedClinics] = useState<Clinic[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // Fetch clinics based on search query
+  const { clinics: searchResults = [] } = useClinics(searchQuery);
+  
+  // Get all clinics for recommended section
+  const { clinics: recommendedClinics = [] } = useClinics();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -101,49 +89,7 @@ export default function Home() {
           border-radius: 4px;
         }
       `}</style>
-      <header
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled
-            ? 'bg-white border-b border-gray-200 shadow-sm'
-            : 'bg-transparent'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <Stethoscope className="h-6 w-6 text-teal-600" />
-              <span className="text-xl font-bold text-gray-800">CliniCare</span>
-            </div>
-
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-gray-700 hover:text-teal-600 transition-colors text-sm font-medium">
-                Beranda
-              </a>
-              <a href="#" className="text-gray-600 hover:text-teal-600 transition-colors text-sm">
-                Layanan
-              </a>
-              <a href="#" className="text-gray-600 hover:text-teal-600 transition-colors text-sm">
-                Cari Klinik
-              </a>
-              <a href="#" className="text-gray-600 hover:text-teal-600 transition-colors text-sm">
-                Tentang Kami
-              </a>
-              <a href="#" className="text-gray-600 hover:text-teal-600 transition-colors text-sm">
-                Blog
-              </a>
-              <a href="#" className="text-gray-600 hover:text-teal-600 transition-colors text-sm">
-                Hubungi Kami
-              </a>
-            </nav>
-
-            <div className="flex items-center">
-              <div className="h-10 w-10 rounded-full bg-linear-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-white font-semibold">
-                JD
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header isScrolled={isScrolled} />
 
       <main className="pt-16">
         <section className="relative overflow-hidden">
@@ -327,53 +273,7 @@ export default function Home() {
                       )}
                     </>
                   ) : (
-                    <>
-                      <div className="p-4 border-b border-gray-100">
-                        <h3 className="font-semibold text-gray-900 mb-3">Rekomendasi Klinik</h3>
-                      </div>
-                      <div className="max-h-96 overflow-y-auto">
-                        {recommendedClinics.map((clinic) => (
-                          <div
-                            key={clinic.id}
-                            onClick={() => handleClinicClick(clinic.id)}
-                            className="p-4 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0 cursor-pointer"
-                          >
-                            <div className="flex items-start space-x-4">
-                              <Image
-                                src={clinic.image_url}
-                                alt={clinic.name}
-                                width={80}
-                                height={80}
-                                className="w-20 h-20 rounded-lg object-cover"
-                              />
-                              <div className="flex-1 min-w-0">
-                                <h4 className="font-semibold text-gray-900 mb-1">
-                                  {clinic.name}
-                                </h4>
-                                <div className="text-xs text-gray-600 mb-2">
-                                  Klinik {clinic.category}
-                                </div>
-                                <div className="flex items-center text-xs text-gray-500 space-x-1 mb-2">
-                                  <MapPin className="h-3 w-3" />
-                                  <span className="line-clamp-1">{clinic.address}</span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <div className="flex items-center space-x-1">
-                                    <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                                    <span className="text-xs font-medium text-gray-700">
-                                      {clinic.rating}
-                                    </span>
-                                  </div>
-                                  <span className="text-xs text-gray-400">
-                                    · {clinic.review_count} Reviews
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </>
+                    <RecommendedClinicsSection clinics={recommendedClinics} onClinicClick={handleClinicClick} />
                   )}
                 </div>
               )}
@@ -381,32 +281,7 @@ export default function Home() {
           </Card>
         </section>
 
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Kategori <span className="text-teal-600">Klinik</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-6">
-            {categories.map((category, index) => {
-              const Icon = category.icon;
-              return (
-                <button
-                  key={index}
-                  className="flex flex-col items-center space-y-3 group cursor-pointer"
-                >
-                  <div className={`w-28 h-28 rounded-full ${category.color} flex items-center justify-center transition-all group-hover:scale-110 group-hover:shadow-lg`}>
-                    <Icon className="h-12 w-12" />
-                  </div>
-                  <span className="text-sm font-medium text-teal-600 group-hover:text-teal-700 transition-colors">
-                    {category.name}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </section>
+        <CategoriesSection />
 
         <section className="max-w-7xl mx-auto py-20">
           <div className="text-center mb-12">
