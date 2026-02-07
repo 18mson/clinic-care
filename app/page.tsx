@@ -15,6 +15,7 @@ import 'swiper/css/pagination';
 import { SearchSection } from '@/components/fragments/SearchSection';
 import ClinicSection from '@/components/fragments/ClinicSection';
 import { PLACEHOLDER_HOSPITAL } from '@/lib/mock/placeholders';
+import { BookingModal } from '@/components/elements/BookingModal';
 
 const promoItems = [
   {
@@ -47,6 +48,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isBooking, setIsbooking] = useState(false);
 
   // Fetch clinics based on search query
   const { clinics: searchResults = [] } = useClinics(searchQuery);
@@ -97,7 +99,9 @@ export default function Home() {
         }
       `}</style>
       <Header isScrolled={isScrolled} />
-
+      {isBooking && (
+        <BookingModal isOpen={isBooking} onClose={() => setIsbooking(false)} />
+      )}
       {/* Mobile Only Top Section */}
       <section className="block md:hidden relative bg-linear-to-tr from-teal-700 to-teal-400 rounded-b-3xl pt-6 pb-4 mb-4 overflow-visible">
         <div className="flex justify-between items-start relative px-4">
@@ -240,7 +244,7 @@ export default function Home() {
         <section className="md:block relative hidden overflow-hidden">
           <div className="absolute overflow-hidden top-0 right-0 w-96 h-96 rounded-full bg-linear-to-b from-teal-100 to-teal-400 translate-x-1/5" />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8 relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 relative">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-8">
                 <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
@@ -256,7 +260,10 @@ export default function Home() {
                   molestie, et feugiat adipiscing.
                 </p>
 
-                <Button className="bg-linear-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-2xl text-white px-8 py-6 rounded-xl shadow-lg shadow-teal-600/30 transition-all hover:shadow-xl hover:shadow-teal-600/40">
+                <Button 
+                  className="bg-linear-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-2xl text-white px-8 py-6 rounded-xl shadow-lg shadow-teal-600/30 transition-all hover:shadow-xl hover:shadow-teal-600/40"
+                  onClick={() => setIsbooking(true)}
+                >
                   Book an appointment
                 </Button>
               </div>
@@ -269,7 +276,7 @@ export default function Home() {
                   <Image
                     src="https://images.pexels.com/photos/4173251/pexels-photo-4173251.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                     alt="Doctor"
-                    className="rounded-2xl w-full h-auto"
+                    className="rounded-2xl w-full h-auto aspect-square object-cover"
                     width={400}
                     height={300}
                   />

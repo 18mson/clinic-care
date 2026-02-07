@@ -7,6 +7,8 @@ interface ButtonProps {
   className?: string;
   variant?: 'primary' | 'secondary';
   showIcon?: boolean;
+  type?: 'button' | 'submit' | 'reset' | undefined;
+  disabled?: boolean
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -15,6 +17,8 @@ export const Button: React.FC<ButtonProps> = ({
   className = '',
   variant = 'primary',
   showIcon = true,
+  type = 'button',
+  disabled = false
 }) => {
   const baseStyles = 'group px-6 py-3 rounded-lg font-medium transition-all duration-300 active:scale-95';
   const variants = {
@@ -23,7 +27,12 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button className={`${baseStyles} ${variants[variant]} ${className}`} onClick={onClick}>
+    <button
+      className={`${baseStyles} ${variants[variant]} ${className}`}
+      onClick={onClick}
+      type={type as 'button' | 'submit' | 'reset' | undefined}
+      disabled={disabled}
+    >
       <span className="flex items-center justify-center text-center gap-2">
         {children}
         {showIcon && (

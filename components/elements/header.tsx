@@ -10,13 +10,13 @@ interface HeaderProps {
 export function Header({ isScrolled }: HeaderProps) {
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 max-w-screen hidden md:block ${
+      className={`fixed top-0 w-screen z-50 transition-all duration-300 max-w-screen items-center hidden md:flex justify-between  ${
         isScrolled
           ? 'bg-white border-b border-gray-200 shadow-sm'
-          : 'bg-transparent bg-linear-to-r from-teal-500 to-teal-700 md:from-white md:to-white'
+          : 'md:bg-linear-to-r/10 bg-linear-to-r from-teal-500 to-teal-700 md:from-white md:to-white h-30'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <Stethoscope className="h-6 w-6 text-teal-600" />

@@ -63,17 +63,17 @@ export function SearchSection({
                         </div>
 
                         <div className="flex flex-wrap gap-2">
-                          {['Semua', 'Umum', 'Mata', 'Gigi', 'THT'].map((cat) => (
+                          {!!categories?.length && categories.map((cat) => (
                             <button
-                              key={cat}
-                              onClick={() => cat !== 'Semua' ? handleCategoryFilter(cat) : handleCategoryFilter('')}
+                              key={cat.id}
+                              onClick={() => cat.name !== 'Semua' ? handleCategoryFilter(cat.name) : handleCategoryFilter('')}
                               className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                                (cat === 'Semua' && !selectedCategory) || selectedCategory === cat
+                                (cat.name === 'Semua' && !selectedCategory) || selectedCategory === cat.name
                                   ? 'bg-teal-600 text-white'
                                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-slate-600'
                               }`}
                             >
-                              {cat}
+                              {cat.name}
                             </button>
                           ))}
                         </div>
