@@ -1,4 +1,6 @@
 export const PLACEHOLDER_IMAGE = 'https://images.pexels.com/photos/7089401/pexels-photo-7089401.jpeg?auto=compress&cs=tinysrgb&w=800';
+export const PLACEHOLDER_HOSPITAL = 'https://images.pexels.com/photos/12104186/pexels-photo-12104186.jpeg?auto=compress&cs=tinysrgb&w=800';
+
 
 // Mock images grouped by clinic id/key. Use these when API returns relative/local paths.
 export const MOCK_IMAGES: Record<string, string[]> = {

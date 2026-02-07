@@ -12,7 +12,7 @@ interface Clinic {
   address: string;
   image_url: string;
   rating: number;
-  review_count: number;
+  totalReviews: number;
 }
 
 interface SearchSectionProps {
@@ -129,7 +129,7 @@ export function SearchSection({
                                     </span>
                                   </div>
                                   <span className="text-xs text-gray-400">
-                                    · {clinic.review_count} Reviews
+                                    · {clinic.totalReviews} Reviews
                                   </span>
                                 </div>
                               </div>

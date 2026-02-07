@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Bell, MapPin, Star, StarIcon, Stethoscope } from 'lucide-react';
+import { Bell, MapPin, Search, Star, StarIcon, Stethoscope, X } from 'lucide-react';
 import { Button } from '@/components/elements/button';
 import { Header } from '@/components/elements/header';
 import { CategoriesSection } from '@/components/fragments/CategoriesSection';
-import { useClinics } from '@/lib/hooks';
+import { useCategories, useClinics } from '@/lib/hooks';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
@@ -14,6 +14,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { SearchSection } from '@/components/fragments/SearchSection';
 import ClinicSection from '@/components/fragments/ClinicSection';
+import { PLACEHOLDER_HOSPITAL } from '@/lib/mock/placeholders';
 
 const promoItems = [
   {
@@ -49,6 +50,9 @@ export default function Home() {
 
   // Fetch clinics based on search query
   const { clinics: searchResults = [] } = useClinics(searchQuery);
+
+  const { categories } = useCategories();
+  console.log(categories);
   
 
   useEffect(() => {
@@ -120,8 +124,22 @@ export default function Home() {
         {/* Search Bar */}
         <div className="mt-4 px-4">
           <div className="flex items-center gap-3 bg-white rounded-xl overflow-hidden shadow-sm px-3 py-2">
-            <svg className="text-gray-400" width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke="#94a3b8" strokeWidth="2"/><path d="M21 21l-4.35-4.35" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round"/></svg>
-            <input className="border-0 flex-1 focus:outline-none focus:ring-0 text-base text-gray-900 bg-transparent" placeholder="Cari klinik..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onFocus={() => setShowSuggestions(true)} />
+            <Search className="absolute left-5 transform h-5 w-5 text-gray-400" />
+            <input 
+              className="ml-4 border-0 flex-1 focus:outline-none focus:ring-0 text-base text-gray-900 bg-transparent" 
+              placeholder="Cari klinik..." 
+              value={searchQuery} 
+              onChange={e => setSearchQuery(e.target.value)} 
+              onFocus={() => setShowSuggestions(true)} 
+            />
+            {!!searchQuery.length && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                type="button" 
+              >
+                <X className="h-5 w-5" />
+              </button>
+            )}
           </div>
         </div>
         {showSuggestions && (
@@ -166,7 +184,7 @@ export default function Home() {
                           >
                             <div className="flex items-start space-x-4">
                               <Image
-                                src={clinic.image_url}
+                                src={PLACEHOLDER_HOSPITAL}
                                 alt={clinic.name}
                                 width={80}
                                 height={80}
@@ -191,7 +209,7 @@ export default function Home() {
                                     </span>
                                   </div>
                                   <span className="text-xs text-gray-400">
-                                    · {clinic.review_count} Reviews
+                                    · {clinic.totalReviews} Reviews
                                   </span>
                                 </div>
                               </div>

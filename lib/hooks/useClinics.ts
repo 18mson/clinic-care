@@ -7,7 +7,7 @@ export interface Clinic {
   category: string;
   address: string;
   rating: number;
-  review_count: number;
+  totalReviews: number;
   image_url: string;
 }
 
